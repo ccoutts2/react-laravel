@@ -13,6 +13,12 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
+
+    public function puppies ()
+    {
+        return $this->hasMany(Puppy::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

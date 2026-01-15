@@ -1,6 +1,6 @@
 export function PageWrapper({ children }: { children: React.ReactNode }) {
     return (
-        <div className="min-h-dvh bg-linear-to-b from-cyan-200 to-white to-[60vh]">
+        <div className="min-h-dvh bg-linear-to-b from-cyan-200 to-white to-[60vh] text-black">
             {children}
         </div>
     );
