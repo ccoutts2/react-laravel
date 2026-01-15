@@ -20,6 +20,7 @@ export function LikeToggle({ puppy }: { puppy: Puppy }) {
         >
             <button
                 type="submit"
+                aria-label={`Like ${puppy.name}`}
                 className={clsx('group', !auth.user && 'cursor-not-allowed')}
                 disabled={!auth.user || processing}
             >

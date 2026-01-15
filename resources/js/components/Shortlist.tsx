@@ -52,6 +52,7 @@ function DeleteButton({ id }: { id: Puppy['id'] }) {
         >
             <button
                 type="submit"
+                aria-label="Delete puppy"
                 className="group h-full border-l border-slate-100 px-2 hover:bg-slate-100"
                 disabled={processing}
             >

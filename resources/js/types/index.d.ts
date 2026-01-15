@@ -59,7 +59,6 @@ export interface Puppy {
         update: boolean;
     };
 }
-
 export interface Filters {
     search?: string;
     [key: string]: unknown;
