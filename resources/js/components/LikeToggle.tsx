@@ -1,43 +1,30 @@
+import { like } from '@/routes/puppies';
+import { Link, usePage } from '@inertiajs/react';
+import clsx from 'clsx';
 import { Heart, LoaderCircle } from 'lucide-react';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { toggleLikedStatus } from '../queries';
-import { Puppy } from '../types';
+import { Puppy, SharedData } from '../types';
 
-export function LikeToggle({
-    puppy,
-    setPuppies,
-}: {
-    puppy: Puppy;
-    setPuppies: Dispatch<SetStateAction<Puppy[]>>;
-}) {
-    const [pending, setPending] = useState(false);
+export function LikeToggle({ puppy }: { puppy: Puppy }) {
+    const { auth } = usePage<SharedData>().props;
+
     return (
-        <button
-            className="group"
-            onClick={async () => {
-                setPending(true);
-                const updatedPuppy = await toggleLikedStatus(puppy.id);
-                setPuppies((prevPups) => {
-                    return prevPups.map((existingPuppy) =>
-                        existingPuppy.id === updatedPuppy.id
-                            ? updatedPuppy
-                            : existingPuppy,
-                    );
-                });
-                setPending(false);
-            }}
+        <Link
+            method="patch"
+            preserveScroll
+            href={like(puppy.id)}
+            className={clsx('group', !auth.user && 'cursor-not-allowed')}
+            disabled={!auth.user}
         >
-            {pending ? (
-                <LoaderCircle className="animate-spin stroke-slate-300" />
-            ) : (
-                <Heart
-                    className={
-                        puppy.likedBy.includes(1)
-                            ? 'fill-pink-500 stroke-none'
-                            : 'stroke-slate-200 group-hover:stroke-slate-300'
-                    }
-                />
-            )}
-        </button>
+            <LoaderCircle className="hidden animate-spin stroke-slate-300 group-data-loading:block" />
+            <Heart
+                className={clsx(
+                    auth.user &&
+                        puppy.likedBy.includes(auth.user.id) &&
+                        auth.user
+                        ? 'block fill-pink-500 stroke-none group-data-loading:hidden'
+                        : 'stroke-slate-200 group-hover:stroke-slate-300 group-data-loading:hidden',
+                )}
+            />
+        </Link>
     );
 }
