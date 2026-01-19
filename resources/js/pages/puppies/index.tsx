@@ -8,19 +8,22 @@ import { Shortlist } from '@/components/Shortlist';
 
 import { Filters, PaginatedResponse, Puppy, SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 export default function App({
     puppies,
     filters,
+    likedPuppies,
 }: {
     puppies: PaginatedResponse<Puppy>;
     filters: Filters;
+    likedPuppies: Puppy[];
 }) {
     return (
         <PageWrapper>
             <Container>
                 <Header />
+                <pre>{JSON.stringify(likedPuppies, null, 2)}</pre>
                 <Main paginatedPuppies={puppies} filters={filters} />
             </Container>
         </PageWrapper>
@@ -34,20 +37,17 @@ function Main({
     filters: Filters;
     paginatedPuppies: PaginatedResponse<Puppy>;
 }) {
-    const [puppies, setPuppies] = useState<Puppy[]>(paginatedPuppies.data);
     const { auth } = usePage<SharedData>().props;
+    const mainRef = useRef<HTMLElement | null>(null);
 
     return (
-        <main>
+        <main ref={mainRef} className="scroll-mt-6">
             <div className="mt-24 grid gap-8 sm:grid-cols-2">
                 <Search filters={filters} />
                 {auth.user && <Shortlist puppies={paginatedPuppies.data} />}
             </div>
             <PuppiesList puppies={paginatedPuppies} />
-            <NewPuppyForm
-                puppies={paginatedPuppies.data}
-                setPuppies={setPuppies}
-            />
+            {auth.user && <NewPuppyForm mainRef={mainRef} />}
         </main>
     );
 }

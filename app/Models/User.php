@@ -16,7 +16,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
 
-    public function puppies (): HasMany
+    public function puppies(): HasMany
     {
         return $this->hasMany(Puppy::class);
     }

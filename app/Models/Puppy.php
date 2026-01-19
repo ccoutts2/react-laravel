@@ -20,5 +20,12 @@ class Puppy extends Model
     public function likedBy(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+
     }
+
+    protected $fillable = [
+        'name',
+        'trait',
+        'image_url'        
+     ];
 }
