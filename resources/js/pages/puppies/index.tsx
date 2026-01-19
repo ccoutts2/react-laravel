@@ -1,4 +1,4 @@
-import { Container } from '@/components/Container';
+import { Container } from '@/components/Container copy';
 import { Header } from '@/components/Header';
 import { NewPuppyForm } from '@/components/NewPuppyForm';
 import { PageWrapper } from '@/components/PageWrapper';
@@ -6,7 +6,7 @@ import { PuppiesList } from '@/components/PuppiesList';
 import { Search } from '@/components/Search';
 import { Shortlist } from '@/components/Shortlist';
 
-import { Filters, Puppy, SharedData } from '@/types';
+import { Filters, PaginatedResponse, Puppy, SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -14,37 +14,40 @@ export default function App({
     puppies,
     filters,
 }: {
-    puppies: Puppy[];
+    puppies: PaginatedResponse<Puppy>;
     filters: Filters;
 }) {
     return (
         <PageWrapper>
             <Container>
                 <Header />
-                <Main inertiaPuppies={puppies} filters={filters} />
+                <Main paginatedPuppies={puppies} filters={filters} />
             </Container>
         </PageWrapper>
     );
 }
 
 function Main({
-    inertiaPuppies,
+    paginatedPuppies,
     filters,
 }: {
     filters: Filters;
-    inertiaPuppies: Puppy[];
+    paginatedPuppies: PaginatedResponse<Puppy>;
 }) {
-    const [puppies, setPuppies] = useState<Puppy[]>(inertiaPuppies);
+    const [puppies, setPuppies] = useState<Puppy[]>(paginatedPuppies.data);
     const { auth } = usePage<SharedData>().props;
 
     return (
         <main>
             <div className="mt-24 grid gap-8 sm:grid-cols-2">
                 <Search filters={filters} />
-                {auth.user && <Shortlist puppies={inertiaPuppies} />}
+                {auth.user && <Shortlist puppies={paginatedPuppies.data} />}
             </div>
-            <PuppiesList puppies={inertiaPuppies} />
-            <NewPuppyForm puppies={puppies} setPuppies={setPuppies} />
+            <PuppiesList puppies={paginatedPuppies} />
+            <NewPuppyForm
+                puppies={paginatedPuppies.data}
+                setPuppies={setPuppies}
+            />
         </main>
     );
 }

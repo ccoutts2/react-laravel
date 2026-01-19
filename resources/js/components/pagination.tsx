@@ -12,8 +12,10 @@ type PaginationProps = {
 
 export function Pagination({ meta, links, className }: PaginationProps) {
     return (
-        <div className={cn('flex items-center justify-between', className)}>
-            <div>
+        <nav
+            className={cn('mt-10 flex items-center justify-between', className)}
+        >
+            <nav>
                 {links.prev && (
                     <Button variant="ghost" asChild>
                         <Link preserveScroll href={links.prev}>
@@ -22,7 +24,7 @@ export function Pagination({ meta, links, className }: PaginationProps) {
                         </Link>
                     </Button>
                 )}
-            </div>
+            </nav>
             <p className="text-sm font-medium">
                 page {meta.current_page} of {meta.last_page}
             </p>
@@ -36,6 +38,6 @@ export function Pagination({ meta, links, className }: PaginationProps) {
                     </Button>
                 )}
             </div>
-        </div>
+        </nav>
     );
 }
