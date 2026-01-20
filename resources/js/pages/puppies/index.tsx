@@ -19,35 +19,22 @@ export default function App({
     filters: Filters;
     likedPuppies: Puppy[];
 }) {
-    return (
-        <PageWrapper>
-            <Container>
-                <Header />
-                <pre>{JSON.stringify(likedPuppies, null, 2)}</pre>
-                <Main paginatedPuppies={puppies} filters={filters} />
-            </Container>
-        </PageWrapper>
-    );
-}
-
-function Main({
-    paginatedPuppies,
-    filters,
-}: {
-    filters: Filters;
-    paginatedPuppies: PaginatedResponse<Puppy>;
-}) {
     const { auth } = usePage<SharedData>().props;
     const mainRef = useRef<HTMLElement | null>(null);
 
     return (
-        <main ref={mainRef} className="scroll-mt-6">
-            <div className="mt-24 grid gap-8 sm:grid-cols-2">
-                <Search filters={filters} />
-                {auth.user && <Shortlist puppies={paginatedPuppies.data} />}
-            </div>
-            <PuppiesList puppies={paginatedPuppies} />
-            {auth.user && <NewPuppyForm mainRef={mainRef} />}
-        </main>
+        <PageWrapper>
+            <Container>
+                <Header />
+                <main ref={mainRef} className="scroll-mt-6">
+                    <div className="mt-24 grid gap-8 sm:grid-cols-2">
+                        <Search filters={filters} />
+                        {auth.user && <Shortlist puppies={likedPuppies} />}
+                    </div>
+                    <PuppiesList puppies={puppies} />
+                    {auth.user && <NewPuppyForm mainRef={mainRef} />}
+                </main>
+            </Container>
+        </PageWrapper>
     );
 }
