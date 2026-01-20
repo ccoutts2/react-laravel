@@ -40,6 +40,7 @@ class PuppyController extends Controller
     public function like(Request $request, Puppy $puppy) 
     {
 
+      
         $puppy->likedBy()->toggle($request->user()->id);
 
         return back();
@@ -78,7 +79,7 @@ class PuppyController extends Controller
             'image_url' => $image_url,
         ]);
 
-        return redirect()->route('home', ['page' => 1])->with('success', 'Puppy created successfully.');
+        return redirect()->route('home', ['page' => 1])->with('success', 'Puppy created successfully!');
     }
     
 }
