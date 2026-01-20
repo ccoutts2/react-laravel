@@ -81,6 +81,29 @@ class PuppyController extends Controller
 
         return redirect()->route('home', ['page' => 1])->with('success', 'Puppy created successfully!');
     }
+
+
+    // Delete
+
+    public function destroy(Request $request, Puppy $puppy)
+    {
+        $imagePath = str_replace('/storage/', '', $puppy->image_url);
+
+        if ($request->user()->cannot('delete', $puppy)) {
+            return back()
+                ->withErrors(['error' => 'You do not have permission to delete this puppy.']);
+        };
+
+        $puppy->delete();
+
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        };
+
+        return redirect()
+            ->route('home', ['page' => 1])
+            ->with('success', 'Puppy deleted successfully.');
+    }
     
 }
 
