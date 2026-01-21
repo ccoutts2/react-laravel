@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Puppy;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PuppyPolicy
 {
@@ -63,5 +62,4 @@ class PuppyPolicy
     {
         return false;
     }
-
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['puppy_id', 'user_id' ], 'puppy_user_unique');
+            $table->unique(['puppy_id', 'user_id'], 'puppy_user_unique');
         });
     }
 

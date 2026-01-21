@@ -30,23 +30,24 @@ class DeleteUnusedPuppyImages extends Command
         $storedImages = Storage::disk('public')->files('puppies');
 
         $usedImages = Puppy::pluck('image_url')
-            ->map(fn($url) => str_replace('/storage/', '', $url))
+            ->map(fn ($url) => str_replace('/storage/', '', $url))
             ->toArray();
 
         $unusedImages = array_diff($storedImages, $usedImages);
-        
+
         $totalCount = count($unusedImages);
 
         if ($totalCount === 0) {
             $this->info('No unused images found.');
+
             return;
         }
 
-        $this->info('Found ' . $totalCount . ' unused images.');
+        $this->info('Found '.$totalCount.' unused images.');
 
         $firstThree = array_slice($unusedImages, 0, 3);
         foreach ($firstThree as $image) {
-            $this->line('-' . $image);
+            $this->line('-'.$image);
         }
 
         if ($totalCount > 3) {
@@ -57,7 +58,7 @@ class DeleteUnusedPuppyImages extends Command
         if ($this->confirm('Do you want to delete these unused images?')) {
             foreach ($unusedImages as $image) {
                 Storage::disk('public')->delete($image);
-                $this->info('Deleted: ' . $image);
+                $this->info('Deleted: '.$image);
             }
 
             $this->info('Unused images deleted successfuilly.');

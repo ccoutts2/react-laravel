@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Puppy extends Model
 {
-
     use HasFactory;
 
     public function user(): BelongsTo
@@ -26,6 +25,6 @@ class Puppy extends Model
     protected $fillable = [
         'name',
         'trait',
-        'image_url'        
-     ];
+        'image_url',
+    ];
 }

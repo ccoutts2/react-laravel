@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Actions;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -14,17 +12,17 @@ class OptimiseWebpImageAction extends Controller
     {
         $image = Image::read($input);
 
-            if ($image->width() > 1000) {
-                $image->scale(width: 1000);
-            }
+        if ($image->width() > 1000) {
+            $image->scale(width: 1000);
+        }
 
-            $encoded = $image->toWebp(quality: 95)->toString();
-            $fileName= Str::random() . '.webp';
+        $encoded = $image->toWebp(quality: 95)->toString();
+        $fileName = Str::random().'.webp';
 
-            return [
-                'fileName' => $fileName,
-                'webpString' => $encoded
-            ];
+        return [
+            'fileName' => $fileName,
+            'webpString' => $encoded,
+        ];
 
     }
 }

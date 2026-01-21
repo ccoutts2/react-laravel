@@ -15,15 +15,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('puppies.store');
 
     Route::put('puppies/{puppy}', [PuppyController::class, 'update'])
-        ->name('puppies.update');    
+        ->name('puppies.update');
 
     Route::delete('puppies/{puppy}', [PuppyController::class, 'destroy'])
-        ->name('puppies.destroy');    
+        ->name('puppies.destroy');
 
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    
+
 });
 
 require __DIR__.'/settings.php';
