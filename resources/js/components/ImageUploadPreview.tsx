@@ -25,5 +25,11 @@ export function ImageUploadPreview({
 
     if (!src) return null;
 
-    return <img src={src} className={cn('mt-4 h-24 rounded-md', className)} {...restProps} />;
+    return (
+        <img
+            src={src}
+            className={cn('mt-4 h-24 rounded-md', className)}
+            {...restProps}
+        />
+    );
 }

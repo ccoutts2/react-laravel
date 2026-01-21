@@ -1,4 +1,13 @@
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { update } from '@/actions/App/Http/Controllers/PuppyController';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Puppy } from '@/types';
 import { useForm } from '@inertiajs/react';
 import clsx from 'clsx';
@@ -10,7 +19,8 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 
 export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
-    const { data, setData, transform, errors, post, processing } = useForm({
+    const { data, setData, transform, errors, processing, submit } = useForm({
+        id: puppy.id,
         name: puppy.name,
         trait: puppy.trait,
         image: null as File | null,
@@ -21,13 +31,20 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="group/update bg-background/30 hover:bg-background" size="icon" variant="secondary" aria-label="Update puppy">
+                <Button
+                    className="group/update bg-background/30 hover:bg-background"
+                    size="icon"
+                    variant="secondary"
+                    aria-label="Update puppy"
+                >
                     <EditIcon className="size-4" />
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogTitle>Edit {puppy.name}</DialogTitle>
-                <DialogDescription>Make changes to your puppy’s information below.</DialogDescription>
+                <DialogDescription>
+                    Make changes to your puppy’s information below.
+                </DialogDescription>
                 <form
                     className="flex flex-col gap-6"
                     onSubmit={(e) => {
@@ -36,9 +53,11 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
                             ...data,
                             _method: 'put',
                         }));
-                        post(route('puppies.update', puppy.id), {
+                        submit(update(puppy.id), {
                             preserveScroll: true,
-                            onSuccess: () => setOpen(false),
+                            onSuccess: () => {
+                                setOpen(false);
+                            },
                         });
                     }}
                 >
@@ -53,7 +72,11 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
                             autoComplete="name"
                             placeholder="Full name"
                         />
-                        {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+                        {errors.name && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.name}
+                            </p>
+                        )}
                     </fieldset>
 
                     <fieldset>
@@ -66,7 +89,11 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
                             required
                             placeholder="Personality trait"
                         />
-                        {errors.trait && <p className="mt-1 text-xs text-red-500">{errors.trait}</p>}
+                        {errors.trait && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.trait}
+                            </p>
+                        )}
                     </fieldset>
 
                     <fieldset>
@@ -75,13 +102,24 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
                             id="image"
                             type="file"
                             className="mt-1 block w-full"
-                            onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)}
+                            onChange={(e) =>
+                                setData(
+                                    'image',
+                                    e.target.files ? e.target.files[0] : null,
+                                )
+                            }
                             placeholder="Profile picture"
                         />
 
-                        {errors.image && <p className="mt-1 text-xs text-red-500">{errors.image}</p>}
+                        {errors.image && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.image}
+                            </p>
+                        )}
 
-                        <ImageUploadPreview source={data.image ?? puppy.imageUrl} />
+                        <ImageUploadPreview
+                            source={data.image ?? puppy.imageUrl}
+                        />
                     </fieldset>
 
                     <DialogFooter className="gap-2">
@@ -89,13 +127,19 @@ export function PuppyUpdate({ puppy }: { puppy: Puppy }) {
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
 
-                        <Button className="relative disabled:opacity-100" disabled={processing} type="submit">
+                        <Button
+                            className="relative disabled:opacity-100"
+                            disabled={processing}
+                            type="submit"
+                        >
                             {processing && (
                                 <div className="absolute inset-0 grid place-items-center">
                                     <LoaderCircle className="size-5 animate-spin stroke-primary-foreground" />
                                 </div>
                             )}
-                            <span className={clsx(processing && 'invisible')}>Update</span>
+                            <span className={clsx(processing && 'invisible')}>
+                                Update
+                            </span>
                         </Button>
                     </DialogFooter>
                 </form>

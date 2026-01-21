@@ -40,7 +40,6 @@ class PuppyController extends Controller
     public function like(Request $request, Puppy $puppy) 
     {
 
-      
         $puppy->likedBy()->toggle($request->user()->id);
 
         return back();
@@ -87,6 +86,7 @@ class PuppyController extends Controller
 
     public function destroy(Request $request, Puppy $puppy)
     {
+
         $imagePath = str_replace('/storage/', '', $puppy->image_url);
 
         if ($request->user()->cannot('delete', $puppy)) {
@@ -104,6 +104,50 @@ class PuppyController extends Controller
             ->route('home', ['page' => 1])
             ->with('success', 'Puppy deleted successfully.');
     }
+
+
+    // Edit
+
+    public function update (Request $request, Puppy $puppy)
+
+    {
+
+        $request->validate([
+            'name' => 'required|min:1|max:255',
+            'trait' => 'required|min:1|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,gif,svg,webp|max:5120', 
+        ]);
+
+        if ($request->hasFile('image')) {
+
+            $oldImagePath = str_replace('/storage/', '', $puppy->image_url);
+            
+            $optimised =(new OptimiseWebpImageAction())->handle($request->file('image'));
+            $path = 'puppies/' . $optimised['fileName'];
+
+            $stored = Storage::disk('public')->put($path, $optimised['webpString']);
+
+            if (!$stored) {
+                return back()->withErrors(['image' => 'Failed to upload image.']);
+            }
+
+            
+            $puppy->image_url = Storage::url($path);
+
+            if ($oldImagePath && Storage::disk('public')->exists($oldImagePath)) {
+                Storage::disk('public')->delete($oldImagePath);
+            }
+
+        }
+
+        $puppy->name = $request->name;
+        $puppy->trait = $request->trait;
+
+        $puppy->save();
+
+        return back()->with('success', 'Puppy updated successfully.');
+    }       
+    
     
 }
 
